@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+<title>Plant Disease Detection</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    background: linear-gradient(135deg,#56ab2f,#a8e063);
+    text-align:center;
+    margin:0;
+    padding:0;
+}
+
+.container{
+    background:white;
+    width:450px;
+    margin:80px auto;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0px 5px 15px rgba(0,0,0,0.3);
+}
+
+h1{
+color:#2e7d32;
+}
+
+button{
+background:#2e7d32;
+color:white;
+padding:10px 20px;
+border:none;
+border-radius:5px;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1b5e20;
+}
+
+img{
+margin-top:20px;
+border-radius:10px;
+}
+
+</style>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement(
+  {pageLanguage: 'en',
+  includedLanguages: 'en,ta,te,hi',
+  layout: google.translate.TranslateElement.InlineLayout.SIMPLE},
+  'google_translate_element');
+}
+</script>
+
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</head>
+
+<body>
+
+<div id="google_translate_element" style="text-align:right; margin:20px;"></div>
+
+<div class="container">
+
+<h1>🌿 Smart Agriculture</h1>
+<h2>Plant Disease Detection</h2>
+
+<form method="POST" enctype="multipart/form-data">
+
+<input type="file" name="image" required onchange="previewImage(event)">
+<br><br>
+
+<h3>Or Capture Image from Camera</h3>
+
+<input type="file" name="camera_image" accept="image/*" capture="environment">
+<br><br>
+
+<img id="preview" width="250" style="display:none;">
+
+<button type="submit">Predict Disease</button>
+
+</form>
+<script>
+    // Access the camera
+    const video = document.getElementById('video');
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => { video.srcObject = stream; })
+        .catch(err => { console.error("Camera access denied:", err); });
+
+    // Capture the photo
+    const snapButton = document.getElementById('snap');
+    const hiddenInput = document.getElementById('camera_image_input');
+
+    snapButton.addEventListener('click', () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        const dataURL = canvas.toDataURL('image/jpeg');
+        hiddenInput.value = dataURL;
+        alert("Image captured! Now click Predict Disease from Camera.");
+    });
+</script>
+
+
+{% if prediction %}
+
+<h2>Prediction: {{prediction}}</h2>
+<h3>Confidence: {{confidence}} %</h3>
+<div style="width:100%;background:#ddd;border-radius:10px;">
+<div style="width:{{confidence}}%;background:#2e7d32;color:white;padding:5px;border-radius:10px;">
+{{confidence}} %
+</div>
+</div>
+<p><b>Status:</b> {{severity}}</p>
+
+<h3 style="color:green">Solution:</h3>
+<p><b>Solution:</b> {{solution}}</p>
+<h3>Recommended Pesticide</h3>
+<p>{{pesticide}}</p>
+
+<img src="{{image_path}}" width="300">
+
+{% endif %}
+
+</div>
+<script>
+function previewImage(event){
+    var reader = new FileReader();
+    reader.onload = function(){
+        var output = document.getElementById('preview');
+        output.src = reader.result;
+        output.style.display = "block";
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
+</script>
+
+<br><br>
+<footer>
+<p>AI Powered Smart Agriculture System 🌿</p>
+<p>Developed by Chintu</p>
+</footer>
+
+</body>
+</html>
