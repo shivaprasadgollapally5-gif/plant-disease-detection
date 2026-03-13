@@ -11,7 +11,7 @@ from tensorflow.keras.preprocessing import image
 app = Flask(__name__)
 
 # Load trained model
-model = load_model("model.h5")
+model = load_model("plant_disease_model.h5")
 
 with open("model/class_indices.json","r") as f:
     class_indices = json.load(f)
@@ -189,6 +189,7 @@ def index():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
