@@ -8,43 +8,98 @@
 <style>
 
 body{
-    font-family: Arial;
-    background: linear-gradient(135deg,#56ab2f,#a8e063);
-    text-align:center;
-    margin:0;
-    padding:0;
+font-family: 'Segoe UI', sans-serif;
+background: linear-gradient(135deg,#4facfe,#00f2fe);
+margin:0;
+padding:0;
 }
 
+/* Main container */
 .container{
-    background:white;
-    width:450px;
-    margin:80px auto;
-    padding:30px;
-    border-radius:15px;
-    box-shadow:0px 5px 15px rgba(0,0,0,0.3);
+width:90%;
+max-width:500px;
+margin:40px auto;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
 }
 
-h1{
+/* Title */
+.title{
+text-align:center;
 color:#2e7d32;
+margin-bottom:20px;
 }
 
+/* Upload section */
+.upload-box{
+border:2px dashed #ccc;
+padding:20px;
+border-radius:10px;
+text-align:center;
+background:#fafafa;
+}
+
+/* Buttons */
 button{
 background:#2e7d32;
 color:white;
-padding:10px 20px;
 border:none;
-border-radius:5px;
+padding:12px 20px;
+border-radius:8px;
 font-size:16px;
 cursor:pointer;
 }
 
+/* Button hover */
 button:hover{
 background:#1b5e20;
 }
 
+/* Result Card */
+.result-card{
+margin-top:25px;
+padding:20px;
+border-radius:12px;
+background:#f1f8e9;
+border-left:6px solid #2e7d32;
+}
+
+/* Image preview */
 img{
-margin-top:20px;
+margin-top:15px;
 border-radius:10px;
+width:100%;
+}
+
+/* Icons */
+h3{
+margin:10px 0;
+}
+
+/* Mobile responsive */
+@media (max-width:600px){
+.container{
+width:95%;
+}
+}
+
+body{
+padding-bottom:70px;
+}
+
+footer{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#2e7d32;
+color:white;
+text-align:center;
+padding:12px;
+font-size:14px;
+box-shadow:0 -2px 10px rgba(0,0,0,0.2);
 }
 
 </style>
@@ -60,6 +115,7 @@ function googleTranslateElementInit() {
 </script>
 
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
 </head>
 
@@ -74,12 +130,12 @@ function googleTranslateElementInit() {
 
 <form method="POST" enctype="multipart/form-data">
 
-<input type="file" name="image" required onchange="previewImage(event)">
+<input type="file" name="image"  onchange="previewImage(event)">
 <br><br>
 
 <h3>Or Capture Image from Camera</h3>
 
-<input type="file" name="camera_image" accept="image/*" capture="environment">
+<input type="file" name="camera_image" accept="image/*" capture="environment" onchange="previewImage(event)" >
 <br><br>
 
 <img id="preview" width="250" style="display:none;">
@@ -109,27 +165,26 @@ function googleTranslateElementInit() {
     });
 </script>
 
+<h2>Crop: {{ crop }}</h2>
+
 
 {% if prediction %}
+    <div class="result-card {{ severity }}">
+        <h2>🌱 Crop: {{ crop }}</h2>
+        <h3>Disease: {{ prediction }}</h3>
+        <p><strong>Confidence:</strong> {{ confidence }}%</p>
+        <p><strong>Severity:</strong> {{ severity }}</p>
 
-<h2>Prediction: {{prediction}}</h2>
-<h3>Confidence: {{confidence}} %</h3>
-<div style="width:100%;background:#ddd;border-radius:10px;">
-<div style="width:{{confidence}}%;background:#2e7d32;color:white;padding:5px;border-radius:10px;">
-{{confidence}} %
-</div>
-</div>
-<p><b>Status:</b> {{severity}}</p>
+        <h4>💡 Solution</h4>
+        <p>{{ solution }}</p>
 
-<h3 style="color:green">Solution:</h3>
-<p><b>Solution:</b> {{solution}}</p>
-<h3>Recommended Pesticide</h3>
-<p>{{pesticide}}</p>
-
-<img src="{{image_path}}" width="300">
-
+        <h4>🧪 Recommended Pesticide</h4>
+        <p>{{ pesticide }}</p>
+	
+	<h4>⚠ Safety Precautions</h4>
+	<p>{{ precaution }}</p>
+    </div>
 {% endif %}
-
 </div>
 <script>
 function previewImage(event){
@@ -143,11 +198,24 @@ function previewImage(event){
 }
 </script>
 
+
 <br><br>
 <footer>
-<p>AI Powered Smart Agriculture System 🌿</p>
+<p> AI Powered Smart Agriculture System 🌿 </p>
 <p>Developed by Chintu</p>
 </footer>
+
+<script>
+function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function(){
+        const output = document.getElementById('preview');
+        output.src = reader.result;
+        output.style.display = "block";
+    };
+    reader.readAsDataURL(event.target.files[0]);
+}
+</script>
 
 </body>
 </html>
