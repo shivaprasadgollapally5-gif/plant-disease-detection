@@ -16,138 +16,194 @@ model = load_model("model/plant_disease_model.h5")
 with open("model/class_indices.json","r") as f:
     class_indices = json.load(f)
 
-class_names = list(class_indices.keys())
+class_names = dict((v, k) for k, v in class_indices.items())
 
 
 
 solutions = {
 
-"Rice_Sheath_Blight":"Apply fungicide like validamycin. Avoid dense planting and reduce nitrogen fertilizer.",
+# 🌾 WHEAT
+"Wheat_Aphid": "Spray water and remove affected parts.",
+"Wheat_Black_Rust": "Use resistant varieties and remove infected leaves.",
+"Wheat_Blast": "Use certified seeds and proper irrigation.",
+"Wheat_Brown_Rust": "Apply fungicide and remove infected plants.",
+"Wheat_Common_Root_Rot": "Improve soil drainage and rotate crops.",
+"Wheat_Fusarium_Head_Blight": "Use disease-free seeds.",
+"Wheat_Healthy": "No disease detected.",
+"Wheat_Leaf_Blight": "Remove infected leaves.",
+"Wheat_Mildew": "Ensure proper airflow.",
+"Wheat_Mite": "Spray water and control pests.",
+"Wheat_Septoria": "Remove infected leaves.",
+"Wheat_Smut": "Use treated seeds.",
+"Wheat_Stem_fly": "Remove infected stems.",
+"Wheat_Tan_spot": "Crop rotation and resistant varieties.",
+"Wheat_Yellow_Rust": "Use resistant seeds and early treatment.",
 
-"Rice_Tungro":"Remove infected plants and control green leafhoppers using insecticides.",
+# 🌿 COTTON
+"Cotton_Aphids": "Wash plants and remove infected leaves.",
+"Cotton_Army_worm": "Handpick larvae and use traps.",
+"Cotton_Bacterial_Blight": "Use disease-free seeds.",
+"Cotton_Healthy": "No disease detected.",
+"Cotton_Powdery_Mildew": "Remove infected parts.",
+"Cotton_Target_spot": "Maintain proper spacing.",
 
-"Rice_bacterial_leaf_blight":"Use resistant rice varieties and avoid excessive nitrogen fertilizers.",
+# 🥭 MANGO
+"Mango_Anthracnose": "Prune infected branches.",
+"Mango_Bacterial Canker": "Remove infected bark.",
+"Mango_Cutting Weevil": "Remove affected fruits.",
+"Mango_Die Back": "Cut affected branches.",
+"Mango_Gall Midge": "Remove damaged parts.",
+"Mango_Healthy": "No disease detected.",
+"Mango_Powdery Mildew": "Remove infected flowers.",
+"Mango_Sooty Mould": "Clean leaves properly.",
 
-"Rice_brown_spot":"Apply balanced fertilizers and fungicides. Improve soil nutrition.",
+# 🌾 RICE
+"Rice_Sheath_Blight": "Reduce plant density.",
+"Rice_Tungro": "Remove infected plants.",
+"Rice_bacterial_leaf_blight": "Use resistant varieties.",
+"Rice_brown_spot": "Apply proper fertilizers.",
+"Rice_healthy": "No disease detected.",
+"Rice_leaf_blast": "Use resistant seeds.",
+"Rice_leaf_scald": "Remove infected leaves.",
+"Rice_narrow_brown_spot": "Improve soil nutrients.",
+"Rice_neck_Blast": "Use fungicide early.",
+"Rice_rice_Hispa": "Remove insects manually.",
 
-"Rice_healthy":"Your plant is healthy. Maintain proper irrigation and balanced fertilization.",
-
-"Rice_leaf_blast":"Use fungicide like tricyclazole and avoid excessive nitrogen fertilizer.",
-
-"Rice_leaf_scald":"Use disease-free seeds and maintain proper water management.",
-
-"Rice_narrow_brown_spot":"Apply balanced fertilizer and maintain proper field drainage.",
-
-"Rice_neck_Blast":"Use resistant varieties and apply fungicide at early stages.",
-
-"Rice_rice_Hispa":"Use insecticides or neem oil spray to control rice hispa insects.",
-
-"Tomato___Bacterial_spot":"Apply copper-based bactericides and avoid overhead watering.",
-
-"Tomato___Early_blight":"Use fungicides like mancozeb and remove infected leaves.",
-
-"Tomato___Late_blight":"Apply fungicides like chlorothalonil and improve air circulation.",
-
-"Tomato___Leaf_Mold":"Reduce humidity and apply fungicides if needed.",
-
-"Tomato___Septoria_leaf_spot":"Remove infected leaves and apply fungicides like chlorothalonil.",
-
-"Tomato___Spider_mites Two-spotted_spider_mite":"Use neem oil spray or insecticidal soap.",
-
-"Tomato___Target_Spot":"Use resistant varieties and apply fungicides.",
-
-"Tomato___Tomato_Yellow_Leaf_Curl_Virus":"Control whiteflies and remove infected plants.",
-
-"Tomato___Tomato_mosaic_virus":"Remove infected plants and disinfect gardening tools.",
-
-"Tomato___healthy":"Your plant is healthy. Continue proper irrigation and fertilization."
-
+# 🍅 TOMATO
+"Tomato___Bacterial_spot": "Remove infected leaves.",
+"Tomato___Early_blight": "Use crop rotation.",
+"Tomato___Late_blight": "Remove infected plants.",
+"Tomato___Leaf_Mold": "Improve ventilation.",
+"Tomato___Septoria_leaf_spot": "Remove infected leaves.",
+"Tomato___Spider_mites Two-spotted_spider_mite": "Wash leaves regularly.",
+"Tomato___Target_Spot": "Avoid wet leaves.",
+"Tomato___Tomato_Yellow_Leaf_Curl_Virus": "Control whiteflies.",
+"Tomato___Tomato_mosaic_virus": "Remove infected plants.",
+"Tomato___healthy": "No disease detected."
 }
 
 pesticides = {
 
-"Rice_Sheath_Blight":"Validamycin 3L",
+# WHEAT
+"Wheat_Aphid": "Imidacloprid",
+"Wheat_Black_Rust": "Propiconazole",
+"Wheat_Blast": "Tricyclazole",
+"Wheat_Brown_Rust": "Mancozeb",
+"Wheat_Common_Root_Rot": "Carbendazim",
+"Wheat_Fusarium_Head_Blight": "Tebuconazole",
+"Wheat_Healthy": "Not required",
+"Wheat_Leaf_Blight": "Chlorothalonil",
+"Wheat_Mildew": "Sulfur fungicide",
+"Wheat_Mite": "Dicofol",
+"Wheat_Septoria": "Azoxystrobin",
+"Wheat_Smut": "Seed treatment fungicide",
+"Wheat_Stem_fly": "Chlorpyrifos",
+"Wheat_Tan_spot": "Propiconazole",
+"Wheat_Yellow_Rust": "Mancozeb",
 
-"Rice_Tungro":"Imidacloprid",
+# COTTON
+"Cotton_Aphids": "Imidacloprid",
+"Cotton_Army_worm": "Spinosad",
+"Cotton_Bacterial_Blight": "Copper oxychloride",
+"Cotton_Healthy": "Not required",
+"Cotton_Powdery_Mildew": "Sulfur",
+"Cotton_Target_spot": "Mancozeb",
 
-"Rice_bacterial_leaf_blight":"Streptomycin sulphate",
+# MANGO
+"Mango_Anthracnose": "Carbendazim",
+"Mango_Bacterial Canker": "Copper fungicide",
+"Mango_Cutting Weevil": "Lambda-cyhalothrin",
+"Mango_Die Back": "Bordeaux mixture",
+"Mango_Gall Midge": "Dimethoate",
+"Mango_Healthy": "Not required",
+"Mango_Powdery Mildew": "Sulfur",
+"Mango_Sooty Mould": "Neem oil",
 
-"Rice_brown_spot":"Carbendazim",
+# RICE
+"Rice_Sheath_Blight": "Validamycin",
+"Rice_Tungro": "Control vectors",
+"Rice_bacterial_leaf_blight": "Copper oxychloride",
+"Rice_brown_spot": "Mancozeb",
+"Rice_healthy": "Not required",
+"Rice_leaf_blast": "Tricyclazole",
+"Rice_leaf_scald": "Carbendazim",
+"Rice_narrow_brown_spot": "Mancozeb",
+"Rice_neck_Blast": "Tricyclazole",
+"Rice_rice_Hispa": "Chlorpyrifos",
 
-"Rice_healthy":"No pesticide needed",
-
-"Rice_leaf_blast":"Tricyclazole",
-
-"Rice_leaf_scald":"Copper oxychloride",
-
-"Rice_narrow_brown_spot":"Mancozeb",
-
-"Rice_neck_Blast":"Tricyclazole",
-
-"Rice_rice_Hispa":"Chlorpyrifos",
-
-"Tomato___Bacterial_spot":"Copper hydroxide",
-
-"Tomato___Early_blight":"Mancozeb",
-
-"Tomato___Late_blight":"Chlorothalonil",
-
-"Tomato___Leaf_Mold":"Azoxystrobin",
-
-"Tomato___Septoria_leaf_spot":"Chlorothalonil",
-
-"Tomato___Spider_mites Two-spotted_spider_mite":"Abamectin",
-
-"Tomato___Target_Spot":"Azoxystrobin",
-
-"Tomato___Tomato_Yellow_Leaf_Curl_Virus":"Imidacloprid",
-
-"Tomato___Tomato_mosaic_virus":"No chemical control",
-
-"Tomato___healthy":"No pesticide needed"
+# TOMATO
+"Tomato___Bacterial_spot": "Copper fungicide",
+"Tomato___Early_blight": "Mancozeb",
+"Tomato___Late_blight": "Metalaxyl",
+"Tomato___Leaf_Mold": "Chlorothalonil",
+"Tomato___Septoria_leaf_spot": "Mancozeb",
+"Tomato___Spider_mites Two-spotted_spider_mite": "Neem oil",
+"Tomato___Target_Spot": "Azoxystrobin",
+"Tomato___Tomato_Yellow_Leaf_Curl_Virus": "Imidacloprid",
+"Tomato___Tomato_mosaic_virus": "No cure",
+"Tomato___healthy": "Not required"
 }
 
 precautions = {
 
-"Rice_Sheath_Blight":"Wear gloves and face mask while spraying. Avoid spraying during windy conditions.",
+# WHEAT
+"Wheat_Aphid": "Avoid excess nitrogen.",
+"Wheat_Black_Rust": "Maintain field hygiene.",
+"Wheat_Blast": "Avoid water stress.",
+"Wheat_Brown_Rust": "Early detection.",
+"Wheat_Common_Root_Rot": "Ensure drainage.",
+"Wheat_Fusarium_Head_Blight": "Avoid humidity.",
+"Wheat_Healthy": "Maintain regular care.",
+"Wheat_Leaf_Blight": "Proper spacing.",
+"Wheat_Mildew": "Ensure airflow.",
+"Wheat_Mite": "Monitor regularly.",
+"Wheat_Septoria": "Avoid wet leaves.",
+"Wheat_Smut": "Use certified seeds.",
+"Wheat_Stem_fly": "Timely sowing.",
+"Wheat_Tan_spot": "Crop rotation.",
+"Wheat_Yellow_Rust": "Early spraying.",
 
-"Rice_Tungro":"Use protective gloves and mask. Wash hands after spraying pesticide.",
+# COTTON
+"Cotton_Aphids": "Avoid overwatering.",
+"Cotton_Army_worm": "Monitor fields regularly.",
+"Cotton_Bacterial_Blight": "Avoid water splash.",
+"Cotton_Healthy": "Maintain plant health.",
+"Cotton_Powdery_Mildew": "Avoid humidity.",
+"Cotton_Target_spot": "Proper spacing.",
 
-"Rice_bacterial_leaf_blight":"Wear protective clothing and avoid inhaling spray mist.",
+# MANGO
+"Mango_Anthracnose": "Avoid moisture.",
+"Mango_Bacterial Canker": "Avoid injury to plants.",
+"Mango_Cutting Weevil": "Clean fallen fruits.",
+"Mango_Die Back": "Regular pruning.",
+"Mango_Gall Midge": "Remove debris.",
+"Mango_Healthy": "Regular monitoring.",
+"Mango_Powdery Mildew": "Ensure airflow.",
+"Mango_Sooty Mould": "Control insects.",
 
-"Rice_brown_spot":"Use gloves and face mask while applying fungicide.",
+# RICE
+"Rice_Sheath_Blight": "Avoid dense planting.",
+"Rice_Tungro": "Control insects.",
+"Rice_bacterial_leaf_blight": "Use clean seeds.",
+"Rice_brown_spot": "Balanced fertilizer.",
+"Rice_healthy": "Maintain proper care.",
+"Rice_leaf_blast": "Avoid excess nitrogen.",
+"Rice_leaf_scald": "Monitor regularly.",
+"Rice_narrow_brown_spot": "Improve soil health.",
+"Rice_neck_Blast": "Timely spraying.",
+"Rice_rice_Hispa": "Manual removal.",
 
-"Rice_healthy":"No pesticide required. Maintain proper field hygiene.",
-
-"Rice_leaf_blast":"Wear gloves, mask and goggles while spraying fungicide.",
-
-"Rice_leaf_scald":"Use protective clothing and wash equipment after spraying.",
-
-"Rice_narrow_brown_spot":"Avoid spraying near water sources and wear safety gear.",
-
-"Rice_neck_Blast":"Use gloves and mask. Do not spray during high wind.",
-
-"Rice_rice_Hispa":"Wear gloves and wash hands thoroughly after application.",
-
-"Tomato___Bacterial_spot":"Wear gloves, mask and avoid direct skin contact with pesticide.",
-
-"Tomato___Early_blight":"Use gloves and protective clothing during spraying.",
-
-"Tomato___Late_blight":"Wear mask and goggles while applying fungicide.",
-
-"Tomato___Leaf_Mold":"Use gloves and wash hands after spraying.",
-
-"Tomato___Septoria_leaf_spot":"Wear mask and avoid inhaling spray mist.",
-
-"Tomato___Spider_mites Two-spotted_spider_mite":"Use gloves and avoid contact with eyes.",
-
-"Tomato___Target_Spot":"Wear gloves and protective clothing.",
-
-"Tomato___Tomato_Yellow_Leaf_Curl_Virus":"Wear gloves and wash hands after pesticide use.",
-
-"Tomato___Tomato_mosaic_virus":"Remove infected plants carefully and wash tools.",
-
-"Tomato___healthy":"No precautions needed."
+# TOMATO
+"Tomato___Bacterial_spot": "Avoid wet leaves.",
+"Tomato___Early_blight": "Crop rotation.",
+"Tomato___Late_blight": "Avoid humidity.",
+"Tomato___Leaf_Mold": "Proper ventilation.",
+"Tomato___Septoria_leaf_spot": "Remove debris.",
+"Tomato___Spider_mites Two-spotted_spider_mite": "Regular cleaning.",
+"Tomato___Target_Spot": "Avoid overcrowding.",
+"Tomato___Tomato_Yellow_Leaf_Curl_Virus": "Control insects.",
+"Tomato___Tomato_mosaic_virus": "Avoid tool contamination.",
+"Tomato___healthy": "Maintain plant health."
 }
 
 # Prediction Function
@@ -162,6 +218,7 @@ def predict_disease(img_path):
 
     class_index = np.argmax(prediction)
     confidence = round(np.max(prediction)*100,2)
+    predicted_class = class_names[class_index]
 
     if confidence < 60:
         predicted_class = "Invalid Image"
@@ -178,6 +235,12 @@ def predict_disease(img_path):
             crop = "Rice"
         elif "Tomato" in predicted_class:
             crop = "Tomato"
+        elif "Wheat" in predicted_class:
+            crop = "Wheat"
+        elif "Cotton" in predicted_class:
+            crop = "Cotton"
+        elif "Mango" in predicted_class:
+            crop = "Mango"
         else:
             crop = "Unknown"
 
